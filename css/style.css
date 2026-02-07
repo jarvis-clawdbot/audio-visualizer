@@ -114,10 +114,12 @@ body {
 }
 
 .control-group label {
-  font-size: 0.6rem;
+  font-size: 0.65rem;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: var(--text-dim);
+  color: var(--neon-primary);
+  font-weight: 600;
+  text-shadow: 0 0 6px var(--neon-primary);
 }
 
 .control-group input[type="range"] {
@@ -140,14 +142,26 @@ body {
 
 .control-group select {
   padding: 0.3rem 0.5rem;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
   color: var(--text-light);
   font-family: 'Rajdhani', sans-serif;
   font-size: 0.8rem;
+  font-weight: 500;
   cursor: pointer;
   outline: none;
+  backdrop-filter: blur(5px);
+}
+
+.control-group select:hover {
+  background: rgba(0, 0, 0, 0.8);
+  border-color: var(--neon-primary);
+}
+
+.control-group select:focus {
+  border-color: var(--neon-accent);
+  box-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
 }
 
 .control-btn {
@@ -283,6 +297,7 @@ body.theme-cosmic {
   font-size: 0.7rem !important;
   font-weight: 600;
   color: var(--neon-primary) !important;
+  text-shadow: 0 0 8px var(--neon-primary);
 }
 
 .mode-selector, .theme-selector {
@@ -291,14 +306,27 @@ body.theme-cosmic {
 
 .mode-select, .theme-select {
   min-width: 120px !important;
-  font-weight: 500;
-  background: rgba(0, 243, 255, 0.1) !important;
-  border-color: rgba(0, 243, 255, 0.3) !important;
+  font-weight: 600;
+  background: rgba(0, 0, 0, 0.8) !important;
+  border: 2px solid var(--neon-primary) !important;
+  border-radius: 8px !important;
+  color: var(--text-light) !important;
+  font-size: 0.75rem !important;
+  padding: 0.4rem 0.6rem !important;
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.3) !important;
+  backdrop-filter: blur(10px) !important;
 }
 
 .mode-select:hover, .theme-select:hover {
-  background: rgba(0, 243, 255, 0.15) !important;
-  border-color: rgba(0, 243, 255, 0.5) !important;
+  background: rgba(0, 0, 0, 0.9) !important;
+  border-color: var(--neon-secondary) !important;
+  box-shadow: 0 0 20px rgba(0, 243, 255, 0.6) !important;
+}
+
+.mode-select:focus, .theme-select:focus {
+  outline: none;
+  border-color: var(--neon-accent) !important;
+  box-shadow: 0 0 25px rgba(0, 243, 255, 0.8) !important;
 }
 
 @media (max-width: 500px) {
