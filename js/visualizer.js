@@ -53,8 +53,15 @@ class AudioVisualizer {
   }
   
   setupEventListeners() {
-    // File upload
+    // File upload - main button
     document.getElementById('audioFile').addEventListener('change', (e) => {
+      if (e.target.files[0]) {
+        this.loadAudio(e.target.files[0]);
+      }
+    });
+    
+    // File upload - top button
+    document.getElementById('audioFileTop').addEventListener('change', (e) => {
       if (e.target.files[0]) {
         this.loadAudio(e.target.files[0]);
       }
