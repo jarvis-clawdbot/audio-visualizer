@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Audio Visualizer | Particle Effects</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <canvas id="visualizer"></canvas>
+  
+  <div class="ui-overlay">
+    <div class="header">
+      <h1 class="logo">◈ Audio Visualizer</h1>
+      <p class="tagline">Experience Sound in Color</p>
+    </div>
+    
+    <div class="controls">
+      <div class="upload-section">
+        <label class="upload-btn" for="audioFile">
+          <span class="icon">🎵</span>
+          Upload Audio
+        </label>
+        <input type="file" id="audioFile" accept="audio/*" hidden>
+      </div>
+      
+      <div class="control-group">
+        <button id="playPause" class="control-btn" disabled>
+          <span class="icon">▶</span>
+        </button>
+        <button id="reset" class="control-btn" disabled>
+          <span class="icon">↺</span>
+        </button>
+      </div>
+      
+      <div class="control-group">
+        <label>Particles</label>
+        <input type="range" id="particleCount" min="50" max="500" value="200">
+      </div>
+      
+      <div class="control-group">
+        <label>Sensitivity</label>
+        <input type="range" id="sensitivity" min="1" max="10" value="4">
+      </div>
+      
+      <div class="control-group">
+        <label>Mode</label>
+        <select id="visualMode">
+          <option value="particles">Particles</option>
+          <option value="bars">Bars</option>
+          <option value="wave">Wave</option>
+          <option value="circular">Circular</option>
+          <option value="galaxy">Galaxy</option>
+        </select>
+      </div>
+      
+      <div class="control-group">
+        <label>Theme</label>
+        <select id="colorTheme">
+          <option value="neon">Neon</option>
+          <option value="sunset">Sunset</option>
+          <option value="ocean">Ocean</option>
+          <option value="forest">Forest</option>
+          <option value="cosmic">Cosmic</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="info-panel">
+      <div class="stat">
+        <span class="label">Frequency</span>
+        <span id="freqValue" class="value">0 Hz</span>
+      </div>
+      <div class="stat">
+        <span class="label">Bass</span>
+        <span id="bassValue" class="value">0%</span>
+      </div>
+      <div class="stat">
+        <span class="label">Particles</span>
+        <span id="particleStat" class="value">0</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="drop-zone" id="dropZone">
+    <div class="drop-content">
+      <span class="icon">🎧</span>
+      <h2>Drop Audio File Here</h2>
+      <p>or click the upload button above</p>
+    </div>
+  </div>
+
+  <audio id="audio" crossorigin="anonymous"></audio>
+
+  <script src="js/visualizer.js"></script>
+</body>
+</html>
