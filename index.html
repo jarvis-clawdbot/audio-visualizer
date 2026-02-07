@@ -15,69 +15,69 @@
       <h1 class="logo">◈ Audio Visualizer</h1>
       <p class="tagline">Experience Sound in Color</p>
     </div>
+  </div>
+  
+  <div class="upload-section">
+    <label class="upload-btn" for="audioFile">
+      <span class="icon">🎵</span>
+      Choose Audio File
+    </label>
+    <input type="file" id="audioFile" accept="audio/*" hidden>
+  </div>
+  
+  <div class="controls">
+    <button id="playPause" class="control-btn" disabled>
+      <span class="icon">▶</span>
+    </button>
+    <button id="reset" class="control-btn" disabled>
+      <span class="icon">↺</span>
+    </button>
     
-    <div class="upload-section">
-      <label class="upload-btn" for="audioFile">
-        <span class="icon">🎵</span>
-        Choose Audio File
-      </label>
-      <input type="file" id="audioFile" accept="audio/*" hidden>
+    <div class="control-group">
+      <label>Mode</label>
+      <select id="visualMode">
+        <option value="particles">Particles</option>
+        <option value="bars">Bars</option>
+        <option value="wave">Wave</option>
+        <option value="circular">Circular</option>
+        <option value="galaxy">Galaxy</option>
+      </select>
     </div>
     
-    <div class="controls" id="controls">
-      <button id="playPause" class="control-btn" disabled>
-        <span class="icon">▶</span>
-      </button>
-      <button id="reset" class="control-btn" disabled>
-        <span class="icon">↺</span>
-      </button>
-      
-      <div class="control-group">
-        <label>Mode</label>
-        <select id="visualMode">
-          <option value="particles">Particles</option>
-          <option value="bars">Bars</option>
-          <option value="wave">Wave</option>
-          <option value="circular">Circular</option>
-          <option value="galaxy">Galaxy</option>
-        </select>
-      </div>
-      
-      <div class="control-group">
-        <label>Theme</label>
-        <select id="colorTheme">
-          <option value="neon">Neon</option>
-          <option value="sunset">Sunset</option>
-          <option value="ocean">Ocean</option>
-          <option value="forest">Forest</option>
-          <option value="cosmic">Cosmic</option>
-        </select>
-      </div>
-      
-      <div class="control-group">
-        <label>Sensitivity</label>
-        <input type="range" id="sensitivity" min="1" max="10" value="4">
-      </div>
-      
-      <div class="control-group">
-        <label>Particles</label>
-        <input type="range" id="particleCount" min="50" max="500" value="200">
-      </div>
+    <div class="control-group">
+      <label>Theme</label>
+      <select id="colorTheme">
+        <option value="neon">Neon</option>
+        <option value="sunset">Sunset</option>
+        <option value="ocean">Ocean</option>
+        <option value="forest">Forest</option>
+        <option value="cosmic">Cosmic</option>
+      </select>
     </div>
     
-    <div class="info-panel">
-      <div class="stat">
-        <span class="label">Freq</span>
-        <span id="freqValue" class="value">0 Hz</span>
-      </div>
-      <div class="stat">
-        <span class="label">Bass</span>
-        <span id="bassValue" class="value">0%</span>
-      </div>
-      <div class="stat">
-        <span class="label">Count</span>
-        <span id="particleStat" class="value">0</span>
-      </div>
+    <div class="control-group">
+      <label>Sensitivity</label>
+      <input type="range" id="sensitivity" min="1" max="10" value="4">
+    </div>
+    
+    <div class="control-group">
+      <label>Particles</label>
+      <input type="range" id="particleCount" min="50" max="500" value="200">
+    </div>
+  </div>
+  
+  <div class="info-panel">
+    <div class="stat">
+      <span class="label">Freq</span>
+      <span id="freqValue" class="value">0 Hz</span>
+    </div>
+    <div class="stat">
+      <span class="label">Bass</span>
+      <span id="bassValue" class="value">0%</span>
+    </div>
+    <div class="stat">
+      <span class="label">Count</span>
+      <span id="particleStat" class="value">0</span>
     </div>
   </div>
   
@@ -85,8 +85,7 @@
     <div class="drop-content">
       <span class="icon">🎧</span>
       <h2>Drop Audio File Here</h2>
-      <p>or click the button above to browse</p>
-      <p class="supported">MP3, WAV, OGG, M4A, FLAC</p>
+      <p>or click "Choose Audio File" button above</p>
     </div>
   </div>
 
