@@ -16,41 +16,21 @@
       <p class="tagline">Experience Sound in Color</p>
     </div>
     
-    <div class="upload-top">
-      <label class="upload-btn-large" for="audioFileTop">
+    <div class="upload-section">
+      <label class="upload-btn" for="audioFile">
         <span class="icon">🎵</span>
         Choose Audio File
       </label>
-      <input type="file" id="audioFileTop" accept="audio/*" hidden>
+      <input type="file" id="audioFile" accept="audio/*" hidden>
     </div>
     
-    <div class="controls">
-      <div class="upload-section">
-        <label class="upload-btn" for="audioFile">
-          <span class="icon">🎵</span>
-          Upload Audio
-        </label>
-        <input type="file" id="audioFile" accept="audio/*" hidden>
-      </div>
-      
-      <div class="control-group">
-        <button id="playPause" class="control-btn" disabled>
-          <span class="icon">▶</span>
-        </button>
-        <button id="reset" class="control-btn" disabled>
-          <span class="icon">↺</span>
-        </button>
-      </div>
-      
-      <div class="control-group">
-        <label>Particles</label>
-        <input type="range" id="particleCount" min="50" max="500" value="200">
-      </div>
-      
-      <div class="control-group">
-        <label>Sensitivity</label>
-        <input type="range" id="sensitivity" min="1" max="10" value="4">
-      </div>
+    <div class="controls" id="controls">
+      <button id="playPause" class="control-btn" disabled>
+        <span class="icon">▶</span>
+      </button>
+      <button id="reset" class="control-btn" disabled>
+        <span class="icon">↺</span>
+      </button>
       
       <div class="control-group">
         <label>Mode</label>
@@ -73,11 +53,21 @@
           <option value="cosmic">Cosmic</option>
         </select>
       </div>
+      
+      <div class="control-group">
+        <label>Sensitivity</label>
+        <input type="range" id="sensitivity" min="1" max="10" value="4">
+      </div>
+      
+      <div class="control-group">
+        <label>Particles</label>
+        <input type="range" id="particleCount" min="50" max="500" value="200">
+      </div>
     </div>
     
     <div class="info-panel">
       <div class="stat">
-        <span class="label">Frequency</span>
+        <span class="label">Freq</span>
         <span id="freqValue" class="value">0 Hz</span>
       </div>
       <div class="stat">
@@ -85,7 +75,7 @@
         <span id="bassValue" class="value">0%</span>
       </div>
       <div class="stat">
-        <span class="label">Particles</span>
+        <span class="label">Count</span>
         <span id="particleStat" class="value">0</span>
       </div>
     </div>
@@ -95,7 +85,8 @@
     <div class="drop-content">
       <span class="icon">🎧</span>
       <h2>Drop Audio File Here</h2>
-      <p>or click the upload button above</p>
+      <p>or click the button above to browse</p>
+      <p class="supported">MP3, WAV, OGG, M4A, FLAC</p>
     </div>
   </div>
 

@@ -23,6 +23,7 @@ class AudioVisualizer {
     // Animation
     this.animationId = null;
     this.time = 0;
+    this.lastFrameTime = 0;
     
     // Stats
     this.frequency = 0;
@@ -44,7 +45,7 @@ class AudioVisualizer {
     this.resize();
     window.addEventListener('resize', () => this.resize());
     this.setupEventListeners();
-    this.animate();
+    this.render();
   }
   
   resize() {
@@ -53,15 +54,8 @@ class AudioVisualizer {
   }
   
   setupEventListeners() {
-    // File upload - main button
+    // File upload
     document.getElementById('audioFile').addEventListener('change', (e) => {
-      if (e.target.files[0]) {
-        this.loadAudio(e.target.files[0]);
-      }
-    });
-    
-    // File upload - top button
-    document.getElementById('audioFileTop').addEventListener('change', (e) => {
       if (e.target.files[0]) {
         this.loadAudio(e.target.files[0]);
       }
@@ -70,11 +64,6 @@ class AudioVisualizer {
     // Drag and drop
     this.dropZone.addEventListener('dragover', (e) => {
       e.preventDefault();
-      this.dropZone.querySelector('.drop-content').style.transform = 'scale(1.1)';
-    });
-    
-    this.dropZone.addEventListener('dragleave', () => {
-      this.dropZone.querySelector('.drop-content').style.transform = 'scale(1)';
     });
     
     this.dropZone.addEventListener('drop', (e) => {
@@ -99,7 +88,6 @@ class AudioVisualizer {
     
     document.getElementById('visualMode').addEventListener('change', (e) => {
       this.visualMode = e.target.value;
-      this.resetParticles();
     });
     
     document.getElementById('colorTheme').addEventListener('change', (e) => {
@@ -109,37 +97,41 @@ class AudioVisualizer {
   }
   
   async loadAudio(file) {
-    const url = URL.createObjectURL(file);
-    this.audio.src = url;
-    
-    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    this.analyser = this.audioContext.createAnalyser();
-    this.analyser.fftSize = 2048;
-    this.bufferLength = this.analyser.frequencyBinCount;
-    this.dataArray = new Uint8Array(this.bufferLength);
-    
-    this.source = this.audioContext.createMediaElementSource(this.audio);
-    this.source.connect(this.analyser);
-    this.analyser.connect(this.audioContext.destination);
-    
-    this.audio.addEventListener('ended', () => {
-      document.getElementById('playPause').querySelector('.icon').textContent = '▶';
-    });
-    
-    // Initialize particles
-    this.initParticles();
-    
-    // Hide drop zone
-    this.dropZone.classList.add('hidden');
-    
-    // Enable controls
-    document.getElementById('playPause').disabled = false;
-    document.getElementById('reset').disabled = false;
-    
-    // Play audio
-    await this.audioContext.resume();
-    this.audio.play();
-    document.getElementById('playPause').querySelector('.icon').textContent = '⏸';
+    try {
+      const url = URL.createObjectURL(file);
+      this.audio.src = url;
+      
+      this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      this.analyser = this.audioContext.createAnalyser();
+      this.analyser.fftSize = 1024;
+      this.bufferLength = this.analyser.frequencyBinCount;
+      this.dataArray = new Uint8Array(this.bufferLength);
+      
+      this.source = this.audioContext.createMediaElementSource(this.audio);
+      this.source.connect(this.analyser);
+      this.analyser.connect(this.audioContext.destination);
+      
+      this.audio.addEventListener('ended', () => {
+        document.getElementById('playPause').querySelector('.icon').textContent = '▶';
+      });
+      
+      // Initialize particles
+      this.initParticles();
+      
+      // Hide drop zone
+      this.dropZone.classList.add('hidden');
+      
+      // Enable controls
+      document.getElementById('playPause').disabled = false;
+      document.getElementById('reset').disabled = false;
+      
+      // Play audio
+      await this.audioContext.resume();
+      this.audio.play();
+      document.getElementById('playPause').querySelector('.icon').textContent = '⏸';
+    } catch (error) {
+      console.error('Error loading audio:', error);
+    }
   }
   
   togglePlay() {
@@ -155,7 +147,6 @@ class AudioVisualizer {
   reset() {
     this.audio.currentTime = 0;
     this.time = 0;
-    this.initParticles();
   }
   
   initParticles() {
@@ -166,13 +157,13 @@ class AudioVisualizer {
       this.particles.push({
         x: Math.random() * this.canvas.width,
         y: Math.random() * this.canvas.height,
-        size: Math.random() * 4 + 1,
+        size: Math.random() * 3 + 1,
         baseX: Math.random() * this.canvas.width,
         baseY: Math.random() * this.canvas.height,
-        vx: (Math.random() - 0.5) * 2,
-        vy: (Math.random() - 0.5) * 2,
+        vx: (Math.random() - 0.5) * 1.5,
+        vy: (Math.random() - 0.5) * 1.5,
         angle: Math.random() * Math.PI * 2,
-        radius: Math.random() * 100 + 50,
+        radius: Math.random() * 80 + 40,
         color: Math.random() > 0.5 ? theme.primary : theme.secondary
       });
     }
@@ -184,13 +175,13 @@ class AudioVisualizer {
       this.particles.push({
         x: Math.random() * this.canvas.width,
         y: Math.random() * this.canvas.height,
-        size: Math.random() * 4 + 1,
+        size: Math.random() * 3 + 1,
         baseX: Math.random() * this.canvas.width,
         baseY: Math.random() * this.canvas.height,
-        vx: (Math.random() - 0.5) * 2,
-        vy: (Math.random() - 0.5) * 2,
+        vx: (Math.random() - 0.5) * 1.5,
+        vy: (Math.random() - 0.5) * 1.5,
         angle: Math.random() * Math.PI * 2,
-        radius: Math.random() * 100 + 50,
+        radius: Math.random() * 80 + 40,
         color: Math.random() > 0.5 ? theme.primary : theme.secondary
       });
     }
@@ -199,33 +190,34 @@ class AudioVisualizer {
     }
   }
   
-  resetParticles() {
-    this.initParticles();
-  }
-  
   getFrequencyData() {
     if (!this.analyser) return { bass: 0, mid: 0, high: 0, avg: 0 };
     
     this.analyser.getByteFrequencyData(this.dataArray);
     
     // Calculate frequency bands
-    const bass = this.dataArray.slice(0, 10).reduce((a, b) => a + b, 0) / 10;
-    const mid = this.dataArray.slice(20, 100).reduce((a, b) => a + b, 0) / 80;
-    const high = this.dataArray.slice(100, 200).reduce((a, b) => a + b, 0) / 100;
-    const avg = this.dataArray.slice(0, 500).reduce((a, b) => a + b, 0) / 500;
+    const bass = this.dataArray.slice(0, 8).reduce((a, b) => a + b, 0) / 8;
+    const mid = this.dataArray.slice(16, 80).reduce((a, b) => a + b, 0) / 64;
+    const high = this.dataArray.slice(80, 160).reduce((a, b) => a + b, 0) / 80;
+    const avg = this.dataArray.slice(0, 400).reduce((a, b) => a + b, 0) / 400;
     
-    this.frequency = Math.round(avg * 10);
+    this.frequency = Math.round(avg * 5);
     this.bass = Math.round((bass / 255) * 100);
     
     return { bass, mid, high, avg };
   }
   
-  animate() {
-    this.animationId = requestAnimationFrame(() => this.animate());
+  render(timestamp = 0) {
+    this.animationId = requestAnimationFrame((t) => this.render(t));
+    
+    // Throttle to ~60fps
+    if (timestamp - this.lastFrameTime < 16) return;
+    this.lastFrameTime = timestamp;
+    
     this.time += 0.016;
     
-    // Clear canvas with fade effect
-    this.ctx.fillStyle = 'rgba(10, 10, 15, 0.1)';
+    // Clear canvas
+    this.ctx.fillStyle = 'rgba(10, 10, 15, 0.2)';
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     
     const freq = this.getFrequencyData();
@@ -257,9 +249,9 @@ class AudioVisualizer {
   }
   
   renderParticles(freq, theme) {
-    const scale = (freq.bass / 255) * this.sensitivity * 2;
+    const scale = (freq.bass / 255) * this.sensitivity;
     
-    this.particles.forEach((p, i) => {
+    this.particles.forEach((p) => {
       // Move particle
       p.x += p.vx;
       p.y += p.vy;
@@ -275,22 +267,21 @@ class AudioVisualizer {
       this.ctx.beginPath();
       this.ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
       this.ctx.fillStyle = p.color;
-      this.ctx.shadowBlur = 15 * scale;
+      this.ctx.shadowBlur = 10 * scale;
       this.ctx.shadowColor = p.color;
       this.ctx.fill();
       
       // Draw connections
       this.particles.forEach((p2, j) => {
-        if (i === j) return;
         const dx = p.x - p2.x;
         const dy = p.y - p2.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
         
-        if (dist < 100) {
+        if (dist < 80) {
           this.ctx.beginPath();
           this.ctx.moveTo(p.x, p.y);
           this.ctx.lineTo(p2.x, p2.y);
-          const opacity = (1 - dist / 100) * 0.3;
+          const opacity = (1 - dist / 80) * 0.2;
           this.ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
           this.ctx.lineWidth = 0.5;
           this.ctx.stroke();
@@ -302,18 +293,18 @@ class AudioVisualizer {
   }
   
   renderBars(freq, theme) {
-    const barCount = 64;
+    const barCount = 48;
     const barWidth = this.canvas.width / barCount;
-    const scale = (freq.avg / 255) * this.sensitivity * 3;
+    const scale = (freq.avg / 255) * this.sensitivity * 2;
     
     for (let i = 0; i < barCount; i++) {
       const dataIndex = Math.floor(i * (this.bufferLength / barCount));
       const value = this.dataArray[dataIndex] || 0;
-      const barHeight = value * scale;
+      const barHeight = Math.min(value * scale, this.canvas.height * 0.8);
       
       const hue = (i / barCount) * 60 + 180;
       this.ctx.fillStyle = `hsl(${hue}, 100%, 60%)`;
-      this.ctx.shadowBlur = 10;
+      this.ctx.shadowBlur = 5;
       this.ctx.shadowColor = this.ctx.fillStyle;
       
       this.ctx.fillRect(
@@ -328,25 +319,25 @@ class AudioVisualizer {
   }
   
   renderWave(freq, theme) {
-    const scale = (freq.avg / 255) * this.sensitivity * 50;
+    const scale = (freq.avg / 255) * this.sensitivity * 30;
     
     this.ctx.beginPath();
     this.ctx.moveTo(0, this.canvas.height / 2);
     
-    for (let i = 0; i < this.canvas.width; i += 5) {
-      const dataIndex = Math.floor(i / this.canvas.width * 256);
+    for (let i = 0; i < this.canvas.width; i += 4) {
+      const dataIndex = Math.floor(i / this.canvas.width * 200);
       const value = (this.dataArray[dataIndex] || 0) / 255;
       
       const y = this.canvas.height / 2 + 
-                Math.sin(i * 0.02 + this.time * 2) * 50 * value +
-                Math.cos(i * 0.01 + this.time) * 30 * (freq.bass / 255);
+                Math.sin(i * 0.02 + this.time * 2) * 30 * value +
+                Math.cos(i * 0.01 + this.time) * 20 * (freq.bass / 255);
       
       this.ctx.lineTo(i, y);
     }
     
     this.ctx.strokeStyle = theme.primary;
-    this.ctx.lineWidth = 3;
-    this.ctx.shadowBlur = 20;
+    this.ctx.lineWidth = 2;
+    this.ctx.shadowBlur = 15;
     this.ctx.shadowColor = theme.primary;
     this.ctx.stroke();
     
@@ -354,19 +345,19 @@ class AudioVisualizer {
     this.ctx.beginPath();
     this.ctx.moveTo(0, this.canvas.height / 2);
     
-    for (let i = 0; i < this.canvas.width; i += 5) {
-      const dataIndex = Math.floor(i / this.canvas.width * 256);
+    for (let i = 0; i < this.canvas.width; i += 4) {
+      const dataIndex = Math.floor(i / this.canvas.width * 200);
       const value = (this.dataArray[dataIndex] || 0) / 255;
       
       const y = this.canvas.height / 2 + 
-                Math.sin(i * 0.015 - this.time * 1.5) * 40 * value +
-                Math.cos(i * 0.02 + this.time * 0.8) * 20;
+                Math.sin(i * 0.015 - this.time * 1.5) * 25 * value +
+                Math.cos(i * 0.02 + this.time * 0.8) * 15;
       
       this.ctx.lineTo(i, y);
     }
     
     this.ctx.strokeStyle = theme.secondary;
-    this.ctx.lineWidth = 2;
+    this.ctx.lineWidth = 1.5;
     this.ctx.shadowColor = theme.secondary;
     this.ctx.stroke();
     
@@ -377,17 +368,17 @@ class AudioVisualizer {
     const centerX = this.canvas.width / 2;
     const centerY = this.canvas.height / 2;
     const scale = (freq.avg / 255) * this.sensitivity;
-    const radius = 100 + scale * 100;
+    const radius = 80 + scale * 80;
     
     // Outer ring
     this.ctx.beginPath();
-    for (let i = 0; i <= 360; i += 2) {
+    for (let i = 0; i <= 360; i += 3) {
       const rad = (i * Math.PI) / 180;
-      const dataIndex = Math.floor(i / 360 * 128);
+      const dataIndex = Math.floor(i / 360 * 100);
       const value = (this.dataArray[dataIndex] || 0) / 255;
       
-      const x = centerX + Math.cos(rad) * (radius + value * 50);
-      const y = centerY + Math.sin(rad) * (radius + value * 50);
+      const x = centerX + Math.cos(rad) * (radius + value * 40);
+      const y = centerY + Math.sin(rad) * (radius + value * 40);
       
       if (i === 0) {
         this.ctx.moveTo(x, y);
@@ -398,8 +389,8 @@ class AudioVisualizer {
     
     this.ctx.closePath();
     this.ctx.strokeStyle = theme.primary;
-    this.ctx.lineWidth = 3;
-    this.ctx.shadowBlur = 20;
+    this.ctx.lineWidth = 2;
+    this.ctx.shadowBlur = 15;
     this.ctx.shadowColor = theme.primary;
     this.ctx.stroke();
     
@@ -407,8 +398,8 @@ class AudioVisualizer {
     this.ctx.beginPath();
     for (let i = 0; i <= 360; i += 5) {
       const rad = (i * Math.PI) / 180;
-      const x = centerX + Math.cos(rad) * (radius * 0.6);
-      const y = centerY + Math.sin(rad) * (radius * 0.6);
+      const x = centerX + Math.cos(rad) * (radius * 0.55);
+      const y = centerY + Math.sin(rad) * (radius * 0.55);
       
       if (i === 0) {
         this.ctx.moveTo(x, y);
@@ -419,15 +410,15 @@ class AudioVisualizer {
     
     this.ctx.closePath();
     this.ctx.strokeStyle = theme.secondary;
-    this.ctx.lineWidth = 2;
+    this.ctx.lineWidth = 1.5;
     this.ctx.shadowColor = theme.secondary;
     this.ctx.stroke();
     
     // Center circle
     this.ctx.beginPath();
-    this.ctx.arc(centerX, centerY, 20 + scale * 30, 0, Math.PI * 2);
+    this.ctx.arc(centerX, centerY, 15 + scale * 20, 0, Math.PI * 2);
     this.ctx.fillStyle = theme.accent;
-    this.ctx.shadowBlur = 30;
+    this.ctx.shadowBlur = 20;
     this.ctx.shadowColor = theme.accent;
     this.ctx.fill();
     
@@ -442,20 +433,20 @@ class AudioVisualizer {
     // Draw galaxy arms
     for (let arm = 0; arm < 3; arm++) {
       this.ctx.beginPath();
-      for (let i = 0; i < 200; i++) {
-        const angle = (i / 200) * Math.PI * 4 + arm * (Math.PI * 2 / 3) + this.time * 0.2;
-        const dist = 30 + i * 1.5;
+      for (let i = 0; i < 150; i++) {
+        const angle = (i / 150) * Math.PI * 4 + arm * (Math.PI * 2 / 3) + this.time * 0.3;
+        const dist = 20 + i * 1.2;
         const x = centerX + Math.cos(angle) * dist;
         const y = centerY + Math.sin(angle) * dist;
         
-        const size = Math.max(0.5, 4 - i * 0.02) * (1 + scale);
-        const opacity = 1 - i / 200;
+        const size = Math.max(0.3, 3 - i * 0.015) * (1 + scale * 0.5);
+        const opacity = 1 - i / 150;
         
         this.ctx.beginPath();
         this.ctx.arc(x, y, size, 0, Math.PI * 2);
         this.ctx.fillStyle = arm === 0 ? theme.primary : arm === 1 ? theme.secondary : theme.accent;
         this.ctx.globalAlpha = opacity;
-        this.ctx.shadowBlur = 10 * scale;
+        this.ctx.shadowBlur = 8 * scale;
         this.ctx.shadowColor = this.ctx.fillStyle;
         this.ctx.fill();
       }
@@ -464,16 +455,16 @@ class AudioVisualizer {
     
     // Center glow
     this.ctx.beginPath();
-    this.ctx.arc(centerX, centerY, 15 + scale * 20, 0, Math.PI * 2);
+    this.ctx.arc(centerX, centerY, 10 + scale * 15, 0, Math.PI * 2);
     const gradient = this.ctx.createRadialGradient(
       centerX, centerY, 0,
-      centerX, centerY, 30 + scale * 30
+      centerX, centerY, 25 + scale * 20
     );
     gradient.addColorStop(0, theme.primary);
     gradient.addColorStop(0.5, theme.secondary);
     gradient.addColorStop(1, 'transparent');
     this.ctx.fillStyle = gradient;
-    this.ctx.shadowBlur = 50;
+    this.ctx.shadowBlur = 30;
     this.ctx.shadowColor = theme.primary;
     this.ctx.fill();
     
