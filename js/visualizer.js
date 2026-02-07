@@ -45,6 +45,10 @@ class AudioVisualizer {
     this.resize();
     window.addEventListener('resize', () => this.resize());
     this.setupEventListeners();
+    
+    // Hide drop zone by default so upload button works immediately
+    this.dropZone.classList.add('hidden');
+    
     this.render();
   }
   
@@ -54,7 +58,7 @@ class AudioVisualizer {
   }
   
   setupEventListeners() {
-    // File upload
+    // File upload - Enable upload button immediately
     document.getElementById('audioFile').addEventListener('change', (e) => {
       if (e.target.files[0]) {
         this.loadAudio(e.target.files[0]);
@@ -72,6 +76,10 @@ class AudioVisualizer {
         this.loadAudio(e.dataTransfer.files[0]);
       }
     });
+    
+    // Enable upload button immediately on page load
+    document.querySelector('.upload-btn').style.pointerEvents = 'auto';
+    document.querySelector('.upload-btn').style.opacity = '1';
     
     // Controls
     document.getElementById('playPause').addEventListener('click', () => this.togglePlay());
@@ -118,7 +126,7 @@ class AudioVisualizer {
       // Initialize particles
       this.initParticles();
       
-      // Hide drop zone
+      // Hide drop zone (if it's still visible)
       this.dropZone.classList.add('hidden');
       
       // Enable controls

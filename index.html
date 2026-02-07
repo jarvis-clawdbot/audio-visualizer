@@ -17,15 +17,17 @@
     </div>
   </div>
   
-  <div class="upload-section">
-    <label class="upload-btn" for="audioFile">
-      <span class="icon">🎵</span>
-      Choose Audio File
-    </label>
-    <input type="file" id="audioFile" accept="audio/*" hidden>
-  </div>
-  
   <div class="controls">
+    <!-- Upload Button - Now part of main controls -->
+    <div class="control-group upload-container">
+      <label class="upload-btn" for="audioFile">
+        <span class="icon">🎵</span>
+        Upload Audio
+      </label>
+      <input type="file" id="audioFile" accept="audio/*" hidden>
+    </div>
+    
+    <!-- Main Controls -->
     <button id="playPause" class="control-btn" disabled>
       <span class="icon">▶</span>
     </button>
@@ -33,9 +35,10 @@
       <span class="icon">↺</span>
     </button>
     
-    <div class="control-group">
-      <label>Mode</label>
-      <select id="visualMode">
+    <!-- Mode Selector - Always visible -->
+    <div class="control-group mode-selector">
+      <label class="mode-label">🎨 Mode</label>
+      <select id="visualMode" class="mode-select">
         <option value="particles">Particles</option>
         <option value="bars">Bars</option>
         <option value="wave">Wave</option>
@@ -44,9 +47,10 @@
       </select>
     </div>
     
-    <div class="control-group">
-      <label>Theme</label>
-      <select id="colorTheme">
+    <!-- Theme Selector - Always visible -->
+    <div class="control-group theme-selector">
+      <label class="theme-label">🎭 Theme</label>
+      <select id="colorTheme" class="theme-select">
         <option value="neon">Neon</option>
         <option value="sunset">Sunset</option>
         <option value="ocean">Ocean</option>
